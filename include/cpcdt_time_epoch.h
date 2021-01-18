@@ -14,6 +14,13 @@
 #define CPCDT_MONTH_OCT 10
 #define CPCDT_MONTH_NOV 11
 #define CPCDT_MONTH_DEC 12
+#define CPCDT_MONTH_SUN 0
+#define CPCDT_MONTH_MON 1
+#define CPCDT_MONTH_TUE 2
+#define CPCDT_MONTH_WED 3
+#define CPCDT_MONTH_THU 4
+#define CPCDT_MONTH_FRI 5
+#define CPCDT_MONTH_SAT 6
 #define cpcdt_nanos_micros(__x__)((__x__) / 1000)
 #define cpcdt_nanos_millis(__x__)((__x__) / 1000000)
 #define cpcdt_nanos_secs(__x__)((__x__) / 1000000000)
@@ -45,6 +52,13 @@
 #define cpcdt_hours_secs(__x__)((__x__) / 3600)
 #define cpcdt_hours_mins(__x__)((__x__) / 60)
 typedef long long cpcdt_ns_t;
+typedef long long cpcdt_mcs_t;
+typedef long long cpcdt_ms_t;
+typedef long long cpcdt_sec_t;
+typedef int cpcdt_min_t;
+typedef int cpcdt_hour_t;
+typedef int cpcdt_dayw_t;
+typedef int cpcdt_day_t;
 typedef int cpcdt_month_t;
 typedef int cpcdt_year_t;
 static inline int CPCDT____DAYS_IN_MONTH[] = {69, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
