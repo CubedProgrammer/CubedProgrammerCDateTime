@@ -9,6 +9,12 @@ cpcdt_ns_t nsec_since_epoch(void)
 	struct timespec tm;
 	clock_gettime(CLOCK_REALTIME, &tm);
 	ns = tm.tv_sec * 1000000000 + tm.tv_nsec;
+#elif defined _WIN32
+	ULARGE_INTEGER tm;
+	NtQuerySystemTime(&tm);
+	ns = tm;
+	ns *= 100;
+	ns -= 11644473600000000000;
 #endif
 	return ns;
 }
