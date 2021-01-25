@@ -14,13 +14,13 @@
 #define CPCDT_MONTH_OCT 10
 #define CPCDT_MONTH_NOV 11
 #define CPCDT_MONTH_DEC 12
-#define CPCDT_MONTH_SUN 0
-#define CPCDT_MONTH_MON 1
-#define CPCDT_MONTH_TUE 2
-#define CPCDT_MONTH_WED 3
-#define CPCDT_MONTH_THU 4
-#define CPCDT_MONTH_FRI 5
-#define CPCDT_MONTH_SAT 6
+#define CPCDT_WEEK_SUN 0
+#define CPCDT_WEEK_MON 1
+#define CPCDT_WEEK_TUE 2
+#define CPCDT_WEEK_WED 3
+#define CPCDT_WEEK_THU 4
+#define CPCDT_WEEK_FRI 5
+#define CPCDT_WEEK_SAT 6
 #define cpcdt_nanos_micros(__x__)((__x__) / 1000)
 #define cpcdt_nanos_millis(__x__)((__x__) / 1000000)
 #define cpcdt_nanos_secs(__x__)((__x__) / 1000000000)
