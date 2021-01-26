@@ -61,7 +61,7 @@ typedef int cpcdt_dayw_t;
 typedef int cpcdt_day_t;
 typedef int cpcdt_month_t;
 typedef int cpcdt_year_t;
-static inline int CPCDT____DAYS_IN_MONTH[] = {69, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+static int CPCDT____DAYS_IN_MONTH[] = {69, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 cpcdt_ns_t nsec_since_epoch(void);
 time_t sec_since_epoch(void);
 int cpcdt_is_leap(cpcdt_year_t yr);

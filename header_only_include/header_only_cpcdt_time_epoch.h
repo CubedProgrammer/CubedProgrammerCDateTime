@@ -1,6 +1,9 @@
 #ifndef __cplusplus
 #ifndef Included_header_only_cpcdt_time_epoch_h
 #define Included_header_only_cpcdt_time_epoch_h
+#ifdef _WIN32
+#include<winternl.h>
+#endif
 #include<cpcdt_time_epoch.h>
 cpcdt_ns_t nsec_since_epoch(void)
 {
