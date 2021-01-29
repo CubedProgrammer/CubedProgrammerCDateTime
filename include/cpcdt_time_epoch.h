@@ -57,7 +57,6 @@ typedef long long cpcdt_ms_t;
 typedef long long cpcdt_sec_t;
 typedef int cpcdt_min_t;
 typedef int cpcdt_hour_t;
-typedef int cpcdt_dayw_t;
 typedef int cpcdt_day_t;
 typedef int cpcdt_month_t;
 typedef int cpcdt_year_t;
