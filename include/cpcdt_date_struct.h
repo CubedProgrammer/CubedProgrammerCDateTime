@@ -19,5 +19,6 @@ typedef struct cpcdt____date *cpcdt_date;
 void cpcdt_get_date(cpcdt_sec_t et, cpcdt_sec_t *sec, cpcdt_min_t *min, cpcdt_hour_t *hr, cpcdt_day_t *day, cpcdt_day_t *dayw, cpcdt_month_t *month, cpcdt_year_t *yr);
 struct cpcdt____date *cpcdt_make_date(cpcdt_sec_t et);
 cpcdt_sec_t cpcdt_get_time(const struct cpcdt____date *date);
+struct cpcdt____date *cpcdt_make_date_from_date(cpcdt_sec_t sec, cpcdt_min_t min, cpcdt_hour_t hr, cpcdt_day_t day, cpcdt_month_t month, cpcdt_year_t year);
 #endif
 #endif
