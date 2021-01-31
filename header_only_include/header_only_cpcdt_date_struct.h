@@ -1,13 +1,23 @@
 #ifndef __cplusplus
 #ifndef Included_header_only_cpcdt_date_struct_h
 #define Included_header_only_cpcdt_date_struct_h
+#include<stdio.h>
+#include<stdlib.h>
 #include<cpcdt_date_struct.h>
+
+/**
+ * Makes a malloc'ed date struct from a time
+ */
 struct cpcdt____date *cpcdt_make_date(cpcdt_sec_t et)
 {
 	struct cpcdt____date *date = malloc(sizeof(struct cpcdt____date));
 	cpcdt_get_date(et, &date->sec, &date->min, &date->hr, &date->day, &date->dayw, &date->month, &date->year);
 	return date;
 }
+
+/**
+ * Get the time since epoch of a date
+ */
 cpcdt_sec_t cpcdt_get_time(const struct cpcdt____date *date)
 {
 	cpcdt_sec_t secs = date->sec + date->min * 60 + date->hr * 3600 + (date->day - 1) * 86400;
@@ -26,6 +36,10 @@ cpcdt_sec_t cpcdt_get_time(const struct cpcdt____date *date)
 	secs += (cpcdt_sec_t)((date->year - 1601) / 400 + 1) * 86400;
 	return secs;
 }
+
+/**
+ * Makes a date struct from a given date
+ */
 struct cpcdt____date *cpcdt_make_date_from_date(cpcdt_sec_t sec, cpcdt_min_t min, cpcdt_hour_t hr, cpcdt_day_t day, cpcdt_month_t month, cpcdt_year_t year)
 {
 	struct cpcdt____date *date = malloc(sizeof(struct cpcdt____date));
@@ -39,6 +53,15 @@ struct cpcdt____date *cpcdt_make_date_from_date(cpcdt_sec_t sec, cpcdt_min_t min
 	date->dayw = (seconds / 86400 + 4) % 7;
 	return date;
 }
+
+/**
+ * Converts to human readable date and stores it in cbuf
+ */
+void cpcdt_readable_date(char *cbuf, const struct cpcdt____date *date)
+{
+	sprintf(cbuf, "%s, %s %d, %d, %d:%d:%d", CPCDT____DWN[date->dayw], CPCDT____MYN[date->month], date->day, date->year, date->hr, date->min, date->sec);
+}
+
 /**
  * Converts time since epoch to readable date
  */
