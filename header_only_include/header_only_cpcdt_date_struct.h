@@ -59,7 +59,14 @@ struct cpcdt____date *cpcdt_make_date_from_date(cpcdt_sec_t sec, cpcdt_min_t min
  */
 void cpcdt_readable_date(char *cbuf, const struct cpcdt____date *date)
 {
-	sprintf(cbuf, "%s, %s %d, %d, %d:%d:%d", CPCDT____DWN[date->dayw], CPCDT____MYN[date->month], date->day, date->year, date->hr, date->min, date->sec);
+	const char *suffix = "th";
+	if(date->day == 1 || date->day == 21 || date->day == 31)
+		suffix = "st";
+	else if(date->day == 2 || date->day == 22)
+		suffix = "nd";
+	else if(date->day == 3 || date->day == 23)
+		suffix = "rd";
+	sprintf(cbuf, "%s, %s %d%s, %d, %s%d:%s%d:%s%lld", CPCDT____DWN[date->dayw], CPCDT____MYN[date->month], date->day, suffix, date->year, date->hr < 10 ? "0" : "", date->hr, date->min < 10 ? "0" : "", date->min, date->sec < 10 ? "0" : "", date->sec);
 }
 
 /**
