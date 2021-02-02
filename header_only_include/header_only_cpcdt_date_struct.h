@@ -55,6 +55,36 @@ struct cpcdt____date *cpcdt_make_date_from_date(cpcdt_sec_t sec, cpcdt_min_t min
 }
 
 /**
+ * Set the value of a date
+ */
+void cpcdt_set_date(struct cpcdt____date *date, int field, int val)
+{
+	switch(field)
+	{
+		case CPCDT_FIELD_SEC:
+			date->sec = val;
+			break;
+		case CPCDT_FIELD_MIN:
+			date->min = val;
+			break;
+		case CPCDT_FIELD_HOUR:
+			date->hr = val;
+			break;
+		case CPCDT_FIELD_DAY:
+			date->day = val;
+			break;
+		case CPCDT_FIELD_MONTH:
+			date->month = val;
+			break;
+		case CPCDT_FIELD_YEAR:
+			date->year = val;
+			break;
+	}
+	cpcdt_sec_t secs = cpcdt_get_time(date);
+	date->dayw = (secs / 86400 + CPCDT_WEEK_THU)  % 7;
+}
+
+/**
  * Converts to human readable date and stores it in cbuf
  */
 void cpcdt_readable_date(char *cbuf, const struct cpcdt____date *date)
