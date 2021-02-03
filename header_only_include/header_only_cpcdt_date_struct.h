@@ -81,7 +81,22 @@ void cpcdt_set_date(struct cpcdt____date *date, int field, int val)
 			break;
 	}
 	cpcdt_sec_t secs = cpcdt_get_time(date);
-	date->dayw = (secs / 86400 + CPCDT_WEEK_THU)  % 7;
+	date->dayw = (secs / 86400 + CPCDT_WEEK_THU) % 7;
+}
+
+/**
+ * Set the value of a date
+ */
+void cpcdt_set_date_all_fields(struct cpcdt____date *date, cpcdt_sec_t sec, cpcdt_min_t min, cpcdt_hour_t hr, cpcdt_day_t day, cpcdt_month_t month, cpcdt_year_t year)
+{
+	date->sec = sec;
+	date->min = min;
+	date->hr = hr;
+	date->day = day;
+	date->month = month;
+	date->year = year;
+	cpcdt_sec_t secs = cpcdt_get_time(date);
+	date->dayw = (secs / 86400 + CPCDT_WEEK_THU) % 7;
 }
 
 /**

@@ -56,6 +56,11 @@ struct cpcdt____date *cpcdt_make_date_from_date(cpcdt_sec_t sec, cpcdt_min_t min
 void cpcdt_set_date(struct cpcdt____date *date, int field, int val);
 
 /**
+ * Set the value of a date
+ */
+void cpcdt_set_date_all_fields(struct cpcdt____date *date, cpcdt_sec_t sec, cpcdt_min_t min, cpcdt_hour_t hr, cpcdt_day_t day, cpcdt_month_t month, cpcdt_year_t year);
+
+/**
  * Converts to human readable date and stores it in cbuf
  */
 void cpcdt_readable_date(char *cbuf, const struct cpcdt____date *date);
