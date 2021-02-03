@@ -10,6 +10,47 @@
 #define CPCDT_FIELD_MONTH 1001
 #define CPCDT_FIELD_YEAR 1002
 
+#define CPCDT____UTC 69
+#define CPCDT_NTWELVE_TIME 997
+#define CPCDT_ASAMOA_TIME 998
+#define CPCDT_HONOLULU_TIME 999
+#define CPCDT_FRPOLYNESIA_TIME 1000
+#define CPCDT_ALASKA_TIME 1001
+#define CPCDT_LA_TIME 1002
+#define CPCDT_EDMONTON_TIME 1003
+#define CPCDT_CHICAGO_TIME 1004
+#define CPCDT_TORONTO_TIME 1005
+#define CPCDT_HALIFAX_TIME 1006
+#define CPCDT_NEWFOUNDLAND_TIME 1007
+#define CPCDT_SAUPAULO_TIME 1008
+#define CPCDT_SGEORGIA_TIME 1009
+#define CPCDT_CAPEVERDE_TIME 1010
+#define CPCDT_LONDON_TIME 1011
+#define CPCDT_BERLIN_TIME 1012
+#define CPCDT_CAIRO_TIME 1013
+#define CPCDT_ISTANBUL_TIME 1014
+#define CPCDT_TEHRAN_TIME 1015
+#define CPCDT_DUBAI_TIME 1016
+#define CPCDT_KABUL_TIME 1017
+#define CPCDT_KARACHI_TIME 1018
+#define CPCDT_MUMBAI_TIME 1019
+#define CPCDT_NEPAL_TIME 1020
+#define CPCDT_DHAKA_TIME 1021
+#define CPCDT_YANGON_TIME 1022
+#define CPCDT_JAKARTA_TIME 1023
+#define CPCDT_BEIJING_TIME 1024
+#define CPCDT_EUCLA_TIME 1025
+#define CPCDT_TOKYO_TIME 1026
+#define CPCDT_ADELAIDE_TIME 1027
+#define CPCDT_SYDNEY_TIME 1028
+#define CPCDT_NSWALES_TIME 1029
+#define CPCDT_MAGADAN_TIME 1030
+#define CPCDT_AUCKLAND_TIME 1031
+#define CPCDT_CHATHAMIS_TIME 1032
+#define CPCDT_SAMOA_TIME 1033
+#define CPCDT_PFOURTEEN_TIME 1034
+
+typedef int cpcdt_timezone_t;
 // days of week names
 static const char *CPCDT____DWN[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
@@ -28,6 +69,7 @@ struct cpcdt____date
 	cpcdt_day_t dayw;
 	cpcdt_month_t month;
 	cpcdt_year_t year;
+	cpcdt_timezone_t timezone;
 };
 typedef struct cpcdt____date *cpcdt_date;
 /**
@@ -41,9 +83,19 @@ void cpcdt_get_date(cpcdt_sec_t et, cpcdt_sec_t *sec, cpcdt_min_t *min, cpcdt_ho
 struct cpcdt____date *cpcdt_make_date(cpcdt_sec_t et);
 
 /**
+ * Makes a malloc'ed date struct from a time with timezone
+ */
+struct cpcdt____date *cpcdt_make_date_with_timezone(cpcdt_sec_t et, cpcdt_timezone_t timezone);
+
+/**
  * Get the time since epoch of a date
  */
 cpcdt_sec_t cpcdt_get_time(const struct cpcdt____date *date);
+
+/**
+ * Get the time since epoch of a date with time zone
+ */
+cpcdt_sec_t cpcdt_get_time_with_timezone(const struct cpcdt____date *date, cpcdt_timezone_t timezone);
 
 /**
  * Makes a date struct from a given date
