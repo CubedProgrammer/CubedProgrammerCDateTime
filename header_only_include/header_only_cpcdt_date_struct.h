@@ -137,7 +137,9 @@ struct cpcdt____date *cpcdt_make_date_with_timezone(cpcdt_sec_t et, cpcdt_timezo
 			et += 50400;
 			break;
 	}
-	return cpcdt_make_date(et);
+	struct cpcdt____date *date =  cpcdt_make_date(et);
+	date->timezone = timezone;
+	return date;
 }
 
 /**
@@ -165,10 +167,10 @@ cpcdt_sec_t cpcdt_get_time(const struct cpcdt____date *date)
 /**
  * Get the time since epoch of a date with time zone
  */
-cpcdt_sec_t cpcdt_get_time_with_timezone(const struct cpcdt____date *date, cpcdt_timezone_t timezone)
+cpcdt_sec_t cpcdt_get_time_with_timezone(const struct cpcdt____date *date)
 {
 	cpcdt_sec_t et = cpcdt_get_time(date);
-	switch(timezone)
+	switch(date->timezone)
 	{
 		case CPCDT_NTWELVE_TIME:
 			et += 43200;
@@ -285,6 +287,17 @@ cpcdt_sec_t cpcdt_get_time_with_timezone(const struct cpcdt____date *date, cpcdt
 			break;
 	}
 	return et;
+}
+
+/**
+ * Changes timezone of a date
+ */
+void cpcdt_convert_timezone(struct cpcdt____date *date, cpcdt_timezone_t timezone)
+{
+	cpcdt_sec_t et = cpcdt_get_time_with_timezone(date);
+	struct cpcdt____date *new = cpcdt_make_date_with_timezone(et, timezone);
+	*date = *new;
+	free(new);
 }
 
 /**

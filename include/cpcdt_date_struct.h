@@ -95,7 +95,12 @@ cpcdt_sec_t cpcdt_get_time(const struct cpcdt____date *date);
 /**
  * Get the time since epoch of a date with time zone
  */
-cpcdt_sec_t cpcdt_get_time_with_timezone(const struct cpcdt____date *date, cpcdt_timezone_t timezone);
+cpcdt_sec_t cpcdt_get_time_with_timezone(const struct cpcdt____date *date);
+
+/**
+ * Changes timezone of a date
+ */
+void cpcdt_convert_timezone(struct cpcdt____date *date, cpcdt_timezone_t timezone);
 
 /**
  * Makes a date struct from a given date
