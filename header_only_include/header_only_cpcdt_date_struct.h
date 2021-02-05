@@ -21,6 +21,58 @@ struct cpcdt____date *cpcdt_make_date(cpcdt_sec_t et)
  */
 struct cpcdt____date *cpcdt_make_date_with_timezone(cpcdt_sec_t et, cpcdt_timezone_t timezone)
 {
+	struct cpcdt____date *date = cpcdt_make_date(et + cpcdt_timezone_offset(timezone));
+	date->timezone = timezone;
+	return date;
+}
+
+/**
+ * Get the time since epoch of a date
+ */
+cpcdt_sec_t cpcdt_get_time(const struct cpcdt____date *date)
+{
+	cpcdt_sec_t secs = date->sec + date->min * 60 + date->hr * 3600 + (date->day - 1) * 86400;
+	if(cpcdt_is_leap(date->year))
+		CPCDT____DAYS_IN_MONTH[CPCDT_MONTH_FEB] = 29;
+	for(cpcdt_month_t i = 1; i < date->month; ++i)
+		secs += CPCDT____DAYS_IN_MONTH[i] * 86400;
+	if(cpcdt_is_leap(date->year))
+		CPCDT____DAYS_IN_MONTH[CPCDT_MONTH_FEB] = 28;
+	secs += (cpcdt_sec_t)(date->year - 1970) * 31536000;
+	// every four years is a leap year
+	secs += (cpcdt_sec_t)((date->year - 1969) / 4) * 86400;
+	// every one hundred years is not a leap year
+	secs -= (cpcdt_sec_t)((date->year - 1901) / 100 + 1) * 86400;
+	// every four hundred years is a leap year
+	secs += (cpcdt_sec_t)((date->year - 1601) / 400 + 1) * 86400;
+	return secs;
+}
+
+/**
+ * Get the time since epoch of a date with time zone
+ */
+cpcdt_sec_t cpcdt_get_time_with_timezone(const struct cpcdt____date *date)
+{
+	return cpcdt_get_time(date) - cpcdt_timezone_offset(date->timezone);
+}
+
+/**
+ * Changes timezone of a date
+ */
+void cpcdt_convert_timezone(struct cpcdt____date *date, cpcdt_timezone_t timezone)
+{
+	cpcdt_sec_t et = cpcdt_get_time_with_timezone(date);
+	struct cpcdt____date *new = cpcdt_make_date_with_timezone(et, timezone);
+	*date = *new;
+	free(new);
+}
+
+/**
+ * Gets the offset of a time zone
+ */
+cpcdt_sec_t cpcdt_timezone_offset(cpcdt_timezone_t timezone)
+{
+	cpcdt_sec_t et = 0;
 	switch(timezone)
 	{
 		case CPCDT_NTWELVE_TIME:
@@ -137,167 +189,7 @@ struct cpcdt____date *cpcdt_make_date_with_timezone(cpcdt_sec_t et, cpcdt_timezo
 			et += 50400;
 			break;
 	}
-	struct cpcdt____date *date =  cpcdt_make_date(et);
-	date->timezone = timezone;
-	return date;
-}
-
-/**
- * Get the time since epoch of a date
- */
-cpcdt_sec_t cpcdt_get_time(const struct cpcdt____date *date)
-{
-	cpcdt_sec_t secs = date->sec + date->min * 60 + date->hr * 3600 + (date->day - 1) * 86400;
-	if(cpcdt_is_leap(date->year))
-		CPCDT____DAYS_IN_MONTH[CPCDT_MONTH_FEB] = 29;
-	for(cpcdt_month_t i = 1; i < date->month; ++i)
-		secs += CPCDT____DAYS_IN_MONTH[i] * 86400;
-	if(cpcdt_is_leap(date->year))
-		CPCDT____DAYS_IN_MONTH[CPCDT_MONTH_FEB] = 28;
-	secs += (cpcdt_sec_t)(date->year - 1970) * 31536000;
-	// every four years is a leap year
-	secs += (cpcdt_sec_t)((date->year - 1969) / 4) * 86400;
-	// every one hundred years is not a leap year
-	secs -= (cpcdt_sec_t)((date->year - 1901) / 100 + 1) * 86400;
-	// every four hundred years is a leap year
-	secs += (cpcdt_sec_t)((date->year - 1601) / 400 + 1) * 86400;
-	return secs;
-}
-
-/**
- * Get the time since epoch of a date with time zone
- */
-cpcdt_sec_t cpcdt_get_time_with_timezone(const struct cpcdt____date *date)
-{
-	cpcdt_sec_t et = cpcdt_get_time(date);
-	switch(date->timezone)
-	{
-		case CPCDT_NTWELVE_TIME:
-			et += 43200;
-			break;
-		case CPCDT_ASAMOA_TIME:
-			et += 39600;
-			break;
-		case CPCDT_HONOLULU_TIME:
-			et += 36000;
-			break;
-		case CPCDT_FRPOLYNESIA_TIME:
-			et += 34200;
-			break;
-		case CPCDT_ALASKA_TIME:
-			et += 32400;
-			break;
-		case CPCDT_LA_TIME:
-			et += 28800;
-			break;
-		case CPCDT_EDMONTON_TIME:
-			et += 25200;
-			break;
-		case CPCDT_CHICAGO_TIME:
-			et += 21600;
-			break;
-		case CPCDT_TORONTO_TIME:
-			et += 18000;
-			break;
-		case CPCDT_HALIFAX_TIME:
-			et += 14400;
-			break;
-		case CPCDT_NEWFOUNDLAND_TIME:
-			et += 12600;
-			break;
-		case CPCDT_SAUPAULO_TIME:
-			et += 10800;
-			break;
-		case CPCDT_SGEORGIA_TIME:
-			et += 7200;
-			break;
-		case CPCDT_CAPEVERDE_TIME:
-			et += 3600;
-			break;
-		case CPCDT_LONDON_TIME:
-			break;
-		case CPCDT_BERLIN_TIME:
-			et -= 3600;
-			break;
-		case CPCDT_CAIRO_TIME:
-			et -= 7200;
-			break;
-		case CPCDT_ISTANBUL_TIME:
-			et -= 10800;
-			break;
-		case CPCDT_TEHRAN_TIME:
-			et -= 12600;
-			break;
-		case CPCDT_DUBAI_TIME:
-			et -= 14400;
-			break;
-		case CPCDT_KABUL_TIME:
-			et -= 16200;
-			break;
-		case CPCDT_KARACHI_TIME:
-			et -= 18000;
-			break;
-		case CPCDT_MUMBAI_TIME:
-			et -= 19800;
-			break;
-		case CPCDT_NEPAL_TIME:
-			et -= 20700;
-			break;
-		case CPCDT_DHAKA_TIME:
-			et -= 21600;
-			break;
-		case CPCDT_YANGON_TIME:
-			et -= 23400;
-			break;
-		case CPCDT_JAKARTA_TIME:
-			et -= 25200;
-			break;
-		case CPCDT_BEIJING_TIME:
-			et -= 28800;
-			break;
-		case CPCDT_EUCLA_TIME:
-			et -= 31500;
-			break;
-		case CPCDT_TOKYO_TIME:
-			et -= 32400;
-			break;
-		case CPCDT_ADELAIDE_TIME:
-			et -= 34200;
-			break;
-		case CPCDT_SYDNEY_TIME:
-			et -= 36000;
-			break;
-		case CPCDT_NSWALES_TIME:
-			et -= 37800;
-			break;
-		case CPCDT_MAGADAN_TIME:
-			et -= 39600;
-			break;
-		case CPCDT_AUCKLAND_TIME:
-			et -= 43200;
-			break;
-		case CPCDT_CHATHAMIS_TIME:
-			et -= 45900;
-			break;
-		case CPCDT_SAMOA_TIME:
-			et -= 46800;
-			break;
-		case CPCDT_PFOURTEEN_TIME:
-			et -= 50400;
-			break;
-	}
 	return et;
-}
-
-/**
- * Changes timezone of a date
- */
-void cpcdt_convert_timezone(struct cpcdt____date *date, cpcdt_timezone_t timezone)
-{
-	cpcdt_sec_t et = cpcdt_get_time_with_timezone(date);
-	struct cpcdt____date *new = cpcdt_make_date_with_timezone(et, timezone);
-	*date = *new;
-	free(new);
 }
 
 /**

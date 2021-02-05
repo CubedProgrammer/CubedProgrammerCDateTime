@@ -103,6 +103,11 @@ cpcdt_sec_t cpcdt_get_time_with_timezone(const struct cpcdt____date *date);
 void cpcdt_convert_timezone(struct cpcdt____date *date, cpcdt_timezone_t timezone);
 
 /**
+ * Gets the offset of a time zone
+ */
+cpcdt_sec_t cpcdt_timezone_offset(cpcdt_timezone_t timezone);
+
+/**
  * Makes a date struct from a given date
  */
 struct cpcdt____date *cpcdt_make_date_from_date(cpcdt_sec_t sec, cpcdt_min_t min, cpcdt_hour_t hr, cpcdt_day_t day, cpcdt_month_t month, cpcdt_year_t year);
