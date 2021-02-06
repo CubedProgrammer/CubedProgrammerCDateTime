@@ -255,6 +255,27 @@ void cpcdt_set_date_all_fields(struct cpcdt____date *date, cpcdt_sec_t sec, cpcd
 }
 
 /**
+ * Checks if a date object is okay, returns zero if it is
+ */
+int cpcdt_is_okay(const struct cpcdt____date *date)
+{
+	if(date->month < 1 || date->month > 12)
+		return CPCDT_FIELD_MONTH;
+	else if(!(cpcdt_is_leap(date->year) && date->month == CPCDT_MONTH_FEB && date->day == 29) && (date->day < 1 || date->day > CPCDT____DAYS_IN_MONTH[date->month]))
+		return CPCDT_FIELD_DAY;
+	else if(date->hr < 0 || date->hr > 23)
+		return CPCDT_FIELD_HOUR;
+	else if(date->min < 0 || date->min > 59)
+		return CPCDT_FIELD_MIN;
+	else if(date->sec < 0 || date->sec > 59)
+		return CPCDT_FIELD_MIN;
+	else if(date->dayw != (cpcdt_get_time(date) / 86400 + CPCDT_WEEK_THU) % 7)
+		return 1;
+	else
+		return 0;
+}
+
+/**
  * Converts to human readable date and stores it in cbuf
  */
 void cpcdt_readable_date(char *cbuf, const struct cpcdt____date *date)
