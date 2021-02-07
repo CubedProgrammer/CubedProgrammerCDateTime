@@ -36,15 +36,14 @@ cpcdt_sec_t cpcdt_get_time(const struct cpcdt____date *date)
 		CPCDT____DAYS_IN_MONTH[CPCDT_MONTH_FEB] = 29;
 	for(cpcdt_month_t i = 1; i < date->month; ++i)
 		secs += CPCDT____DAYS_IN_MONTH[i] * 86400;
-	if(cpcdt_is_leap(date->year))
-		CPCDT____DAYS_IN_MONTH[CPCDT_MONTH_FEB] = 28;
+	CPCDT____DAYS_IN_MONTH[CPCDT_MONTH_FEB] = 28;
 	secs += (cpcdt_sec_t)(date->year - 1970) * 31536000;
 	// every four years is a leap year
-	secs += (cpcdt_sec_t)((date->year - 1969) / 4) * 86400;
+	secs += (cpcdt_sec_t)(date->year < 1970 ? (date->year - 1972) / 4 : (date->year - 1969) / 4) * 86400;
 	// every one hundred years is not a leap year
-	secs -= (cpcdt_sec_t)((date->year - 1901) / 100 + 1) * 86400;
+	secs -= (cpcdt_sec_t)(date->year < 1970 ? (date->year - 2000) / 100: (date->year - 1901) / 100) * 86400;
 	// every four hundred years is a leap year
-	secs += (cpcdt_sec_t)((date->year - 1601) / 400 + 1) * 86400;
+	secs += (cpcdt_sec_t)(date->year < 1970 ? (date->year - 2000) / 400 : (date->year - 1601) / 400) * 86400;
 	return secs;
 }
 
@@ -295,12 +294,12 @@ void cpcdt_readable_date(char *cbuf, const struct cpcdt____date *date)
  */
 void cpcdt_get_date(cpcdt_sec_t et, cpcdt_sec_t *sec, cpcdt_min_t *min, cpcdt_hour_t *hr, cpcdt_day_t *day, cpcdt_day_t *dayw, cpcdt_month_t *month, cpcdt_year_t *yr)
 {
-	*sec = et % 60;
-	*min = et / 60 % 60;
-	*hr = et / 3600 % 24;
-	long long rday = et / 86400;
-	long long fc = rday / 146097;
-	long long fcy = rday % 146097;
+	*sec = (et % 60 + 60) % 60;
+	*min = ((et - (et < 0 ? 59 : 0)) / 60 % 60 + 60) % 60;
+	*hr = ((et - (et < 0 ? 3599 : 0)) / 3600 % 24 + 24) % 24;
+	long long rday = (et - (et < 0 ? 86399 : 0)) / 86400;
+	long long fc = (rday - (rday < 0 ? 146096 : 0)) / 146097;
+	long long fcy = (rday % 146097 + 146097) % 146097;
 	long long ct = fcy / 36524;
 	long long cty = fcy % 36524;
 	if(fcy == 36524 || fcy == 73048 || fcy == 109572 || fcy == 146096)
@@ -351,6 +350,8 @@ void cpcdt_get_date(cpcdt_sec_t et, cpcdt_sec_t *sec, cpcdt_min_t *min, cpcdt_ho
 		CPCDT____DAYS_IN_MONTH[CPCDT_MONTH_FEB] = 28;
 	// Jan 1st, 1970 was a Thursday
 	*dayw = (rday + CPCDT_WEEK_THU) % 7;
+	*dayw += 7;
+	*dayw %= 7;
 }
 #endif
 #endif
