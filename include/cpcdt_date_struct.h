@@ -128,6 +128,22 @@ int cpcdt_is_okay(const struct cpcdt____date *date);
 void cpcdt_set_date_all_fields(struct cpcdt____date *date, cpcdt_sec_t sec, cpcdt_min_t min, cpcdt_hour_t hr, cpcdt_day_t day, cpcdt_month_t month, cpcdt_year_t year);
 
 /**
+ * Gets the name of a month
+ */
+static inline const char *cpcdt_month_name(cpcdt_month_t month)
+{
+	return CPCDT____MYN[month];
+}
+
+/**
+ * Gets the name of a day of the week
+ */
+static inline const char *cpcdt_day_name(cpcdt_day_t day)
+{
+	return CPCDT____DWN[day];
+}
+
+/**
  * Converts to human readable date and stores it in cbuf
  */
 void cpcdt_readable_date(char *cbuf, const struct cpcdt____date *date);
