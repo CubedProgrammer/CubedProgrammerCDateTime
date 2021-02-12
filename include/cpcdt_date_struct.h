@@ -128,6 +128,14 @@ int cpcdt_is_okay(const struct cpcdt____date *date);
 void cpcdt_set_date_all_fields(struct cpcdt____date *date, cpcdt_sec_t sec, cpcdt_min_t min, cpcdt_hour_t hr, cpcdt_day_t day, cpcdt_month_t month, cpcdt_year_t year);
 
 /**
+ * Get the difference in seconds of two date objects
+ */
+static inline cpcdt_sec_t cpcdt_date_diff(const struct cpcdt____date *x, const struct cpcdt____date *y)
+{
+	return cpcdt_get_time_with_timezone(x) - cpcdt_get_time_with_timezone(y);
+}
+
+/**
  * Gets the name of a month
  */
 static inline const char *cpcdt_month_name(cpcdt_month_t month)
