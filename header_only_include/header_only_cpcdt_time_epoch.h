@@ -13,9 +13,9 @@ cpcdt_ns_t nsec_since_epoch(void)
 	clock_gettime(CLOCK_REALTIME, &tm);
 	ns = tm.tv_sec * 1000000000 + tm.tv_nsec;
 #elif defined _WIN32
-	ULARGE_INTEGER tm;
+	LARGE_INTEGER tm;
 	NtQuerySystemTime(&tm);
-	ns = tm;
+	ns = tm.QuadPart;
 	ns *= 100;
 	ns -= 11644473600000000000;
 #endif
