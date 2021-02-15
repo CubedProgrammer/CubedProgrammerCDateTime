@@ -136,6 +136,42 @@ static inline cpcdt_sec_t cpcdt_date_diff(const struct cpcdt____date *x, const s
 }
 
 /**
+ * Gets today's date.
+ */
+static inline struct cpcdt____date *cpcdt_get_today(void)
+{
+	struct cpcdt____date *date = cpcdt_make_date(sec_since_epoch());
+	date->hr = 0;
+	date->min = 0;
+	date->sec = 0;
+	return date;
+}
+
+/**
+ * Gets yesterday's date
+ */
+static inline struct cpcdt____date *cpcdt_get_yesterday(void)
+{
+	struct cpcdt____date *date = cpcdt_make_date(sec_since_epoch() - 86400);
+	date->hr = 0;
+	date->min = 0;
+	date->sec = 0;
+	return date;
+}
+
+/**
+ * Gets tomorrow's date
+ */
+static inline struct cpcdt____date *cpcdt_get_tomorrow(void)
+{
+	struct cpcdt____date *date = cpcdt_make_date(sec_since_epoch() + 86400);
+	date->hr = 0;
+	date->min = 0;
+	date->sec = 0;
+	return date;
+}
+
+/**
  * Gets the name of a month
  */
 static inline const char *cpcdt_month_name(cpcdt_month_t month)
