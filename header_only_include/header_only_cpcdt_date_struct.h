@@ -254,6 +254,18 @@ void cpcdt_set_date_all_fields(struct cpcdt____date *date, cpcdt_sec_t sec, cpcd
 }
 
 /**
+ * Get the first day of week of a month, for example, first Tuesday of April
+ */
+struct cpcdt____date *cpcdt_month_dayw(cpcdt_year_t year,cpcdt_month_t month, cpcdt_day_t day)
+{
+	struct cpcdt____date *date = cpcdt_make_date_from_date(0, 0, 0, 1, month, year);
+	cpcdt_day_t diff = (day - date->dayw + 7) % 7;
+	date->day += diff;
+	date->dayw = day;
+	return date;
+}
+
+/**
  * Checks if a date object is okay, returns zero if it is
  */
 int cpcdt_is_okay(const struct cpcdt____date *date)

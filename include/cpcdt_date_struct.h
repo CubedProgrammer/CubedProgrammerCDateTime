@@ -128,6 +128,11 @@ int cpcdt_is_okay(const struct cpcdt____date *date);
 void cpcdt_set_date_all_fields(struct cpcdt____date *date, cpcdt_sec_t sec, cpcdt_min_t min, cpcdt_hour_t hr, cpcdt_day_t day, cpcdt_month_t month, cpcdt_year_t year);
 
 /**
+ * Get the first day of week of a month, for example, first Tuesday of April
+ */
+struct cpcdt____date *cpcdt_month_dayw(cpcdt_year_t year,cpcdt_month_t month, cpcdt_day_t day);
+
+/**
  * Get the difference in seconds of two date objects
  */
 static inline cpcdt_sec_t cpcdt_date_diff(const struct cpcdt____date *x, const struct cpcdt____date *y)
