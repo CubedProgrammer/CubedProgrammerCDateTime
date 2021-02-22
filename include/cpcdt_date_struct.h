@@ -133,6 +133,12 @@ void cpcdt_set_date_all_fields(struct cpcdt____date *date, cpcdt_sec_t sec, cpcd
 struct cpcdt____date *cpcdt_month_dayw(cpcdt_year_t year,cpcdt_month_t month, cpcdt_day_t day);
 
 /**
+ * Reads a date in the form of DAY_OF_WEEK, MONTH DAYst/nd/rd/th, YEAR, HR:MIN:SEC
+ * DAY_OF_WEEK is actually ignored and will be correctly calculated, that does NOT mean you can exclude it from the string.
+ */
+struct cpcdt____date *cpcdt_parse_date(const char *ds);
+
+/**
  * Get the difference in seconds of two date objects
  */
 static inline cpcdt_sec_t cpcdt_date_diff(const struct cpcdt____date *x, const struct cpcdt____date *y)
@@ -174,6 +180,20 @@ static inline struct cpcdt____date *cpcdt_get_tomorrow(void)
 	date->min = 0;
 	date->sec = 0;
 	return date;
+}
+
+/**
+ * Compares two dates, returns -1 if x comes before y, 1 if y comes before x, and 0 if equal
+ */
+static inline int cpcdt_compar_date(const struct cpcdt____date *x, const struct cpcdt____date *y)
+{
+	cpcdt_sec_t xn = cpcdt_get_time_with_timezone(x), yn = cpcdt_get_time_with_timezone(y);
+	if(xn < yn)
+		return-1;
+	else if(xn > yn)
+		return 1;
+	else
+		return 0;
 }
 
 /**

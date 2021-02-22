@@ -3,6 +3,7 @@
 #define Included_header_only_cpcdt_date_struct_h
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 #include<cpcdt_date_struct.h>
 
 /**
@@ -299,6 +300,48 @@ void cpcdt_readable_date(char *cbuf, const struct cpcdt____date *date)
 	else if(date->day == 3 || date->day == 23)
 		suffix = "rd";
 	sprintf(cbuf, "%s, %s %d%s, %d, %s%d:%s%d:%s%lld", CPCDT____DWN[date->dayw], CPCDT____MYN[date->month], date->day, suffix, date->year, date->hr < 10 ? "0" : "", date->hr, date->min < 10 ? "0" : "", date->min, date->sec < 10 ? "0" : "", date->sec);
+}
+
+/**
+ * Reads a date in the form of DAY_OF_WEEK, MONTH DAYst/nd/rd/th, YEAR, HR:MIN:SEC
+ * DAY_OF_WEEK is actually ignored and will be correctly calculated, that does NOT mean you can exclude it from the string.
+ */
+struct cpcdt____date *cpcdt_parse_date(const char *ds)
+{
+	struct cpcdt____date *date = NULL;
+	int fine = 1;
+	size_t len = strlen(ds);
+	char *str = malloc(len + 1);
+	strcpy(str, ds);
+	char *monthp = strchr(str, ',') + 2;
+	char *spacep = strchr(monthp, ' ');
+	*spacep++='\0';
+	cpcdt_month_t month;
+	fine = 0;
+	for(cpcdt_month_t i = 1; i <= 12; ++i)
+	{
+		if(strcmp(monthp, CPCDT____MYN[i]) == 0)
+		{
+			month = i;
+			fine = 1;
+		}
+	}
+	char *nspacep = strchr(spacep, ' ');
+	nspacep[-3] = '\0';
+	cpcdt_day_t day = atoi(spacep);
+	spacep = strchr(++nspacep, ' ');
+	spacep[-1] = '\0';
+	cpcdt_year_t year = atoi(nspacep);
+	++spacep;
+	cpcdt_hour_t hr = (spacep[0] - '0') * 10 + (spacep[1] - '0');
+	cpcdt_min_t min = (spacep[3] - '0') * 10 + (spacep[4] - '0');
+	cpcdt_sec_t sec = (spacep[6] - '0') * 10 + (spacep[7] - '0');
+	if(hr < 0 || hr > 23 || min < 0 || min > 59 || sec < 0 || sec > 59)
+		fine = 0;
+	if(fine)
+		date = cpcdt_make_date_from_date(sec, min, hr, day, month, year);
+	free(str);
+	return date;
 }
 
 /**
