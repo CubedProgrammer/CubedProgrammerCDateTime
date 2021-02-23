@@ -302,6 +302,8 @@ void cpcdt_readable_date(char *cbuf, const struct cpcdt____date *date)
 	sprintf(cbuf, "%s, %s %d%s, %d, %s%d:%s%d:%s%lld", CPCDT____DWN[date->dayw], CPCDT____MYN[date->month], date->day, suffix, date->year, date->hr < 10 ? "0" : "", date->hr, date->min < 10 ? "0" : "", date->min, date->sec < 10 ? "0" : "", date->sec);
 }
 
+int CPCDT____LAST_PARSE_ERROR;
+
 /**
  * Reads a date in the form of DAY_OF_WEEK, MONTH DAYst/nd/rd/th, YEAR, HR:MIN:SEC
  * DAY_OF_WEEK is actually ignored and will be correctly calculated, that does NOT mean you can exclude it from the string.
@@ -326,6 +328,8 @@ struct cpcdt____date *cpcdt_parse_date(const char *ds)
 			fine = 1;
 		}
 	}
+	if(fine == 0)
+		CPCDT____LAST_PARSE_ERROR = CPCDT_INVALID_MONTH;
 	char *nspacep = strchr(spacep, ' ');
 	nspacep[-3] = '\0';
 	cpcdt_day_t day = atoi(spacep);
@@ -333,15 +337,38 @@ struct cpcdt____date *cpcdt_parse_date(const char *ds)
 	spacep[-1] = '\0';
 	cpcdt_year_t year = atoi(nspacep);
 	++spacep;
+	if(cpcdt_is_leap(year))
+		CPCDT____DAYS_IN_MONTH[CPCDT_MONTH_FEB] = 29;
+	if(day < 1 || day > CPCDT____DAYS_IN_MONTH[month])
+	{
+		fine = 0;
+		CPCDT____LAST_PARSE_ERROR = CPCDT_INVALID_DAY;
+	}
+	if(cpcdt_is_leap(year))
+		CPCDT____DAYS_IN_MONTH[CPCDT_MONTH_FEB] = 28;
 	cpcdt_hour_t hr = (spacep[0] - '0') * 10 + (spacep[1] - '0');
 	cpcdt_min_t min = (spacep[3] - '0') * 10 + (spacep[4] - '0');
 	cpcdt_sec_t sec = (spacep[6] - '0') * 10 + (spacep[7] - '0');
+	if(hr < 0 || hr > 23)
+		CPCDT____LAST_PARSE_ERROR = CPCDT_INVALID_HOUR;
+	if(min < 0 || min > 59)
+		CPCDT____LAST_PARSE_ERROR = CPCDT_INVALID_MINUTE;
+	if(sec < 0 || sec > 59)
+		CPCDT____LAST_PARSE_ERROR = CPCDT_INVALID_SECOND;
 	if(hr < 0 || hr > 23 || min < 0 || min > 59 || sec < 0 || sec > 59)
 		fine = 0;
 	if(fine)
 		date = cpcdt_make_date_from_date(sec, min, hr, day, month, year);
 	free(str);
 	return date;
+}
+
+/**
+ * Gets the error of the last date parsing call
+ */
+int cpcdt_get_last_parse_error(void)
+{
+	return CPCDT____LAST_PARSE_ERROR;
 }
 
 /**

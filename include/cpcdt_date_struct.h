@@ -49,6 +49,12 @@
 #define CPCDT_CHATHAMIS_TIME 1032
 #define CPCDT_SAMOA_TIME 1033
 #define CPCDT_PFOURTEEN_TIME 1034
+#define CPCDT_INVALID_MONTH 997
+#define CPCDT_INVALID_DAY 998
+#define CPCDT_INVALID_HOUR 999
+#define CPCDT_INVALID_MINUTE 1000
+#define CPCDT_INVALID_SECOND 1001
+#define CPCDT_NO_ERROR 0
 
 typedef int cpcdt_timezone_t;
 // days of week names
@@ -216,5 +222,10 @@ static inline const char *cpcdt_day_name(cpcdt_day_t day)
  * Converts to human readable date and stores it in cbuf
  */
 void cpcdt_readable_date(char *cbuf, const struct cpcdt____date *date);
+
+/**
+ * Gets the error of the last date parsing call
+ */
+int cpcdt_get_last_parse_error(void);
 #endif
 #endif
