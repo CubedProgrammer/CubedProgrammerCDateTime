@@ -2,7 +2,7 @@
 #ifndef Included_header_only_cpcdt_time_epoch_h
 #define Included_header_only_cpcdt_time_epoch_h
 #ifdef _WIN32
-#include<winternl.h>
+#include<windows.h>
 #endif
 #include<cpcdt_time_epoch.h>
 cpcdt_ns_t nsec_since_epoch(void)
@@ -13,11 +13,16 @@ cpcdt_ns_t nsec_since_epoch(void)
 	clock_gettime(CLOCK_REALTIME, &tm);
 	ns = tm.tv_sec * 1000000000 + tm.tv_nsec;
 #elif defined _WIN32
-	LARGE_INTEGER tm;
-	NtQuerySystemTime(&tm);
-	ns = tm.QuadPart;
+	SYSTEMTIME tm;
+	GetSystemTime(&tm);
+	FILETIME ftm;
+	SystemTimeToFileTime(&tm, &ftm);
+	ULARGE_INTEGER num;
+	num.LowPart = ftm.dwLowDateTime;
+	num.HighPart = ftm.dwHighDateTime;
+	ns = num.QuadPart;
+	ns -= 116444736000000000;
 	ns *= 100;
-	ns -= 11644473600000000000;
 #endif
 	return ns;
 }
