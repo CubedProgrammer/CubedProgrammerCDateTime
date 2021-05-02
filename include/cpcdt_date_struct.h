@@ -189,6 +189,42 @@ static inline struct cpcdt____date *cpcdt_get_tomorrow(void)
 }
 
 /**
+ * Gets today's date.
+ */
+static inline struct cpcdt____date *cpcdt_get_today_with_timezone(cpcdt_timezone_t tz)
+{
+	struct cpcdt____date *date = cpcdt_make_date(sec_since_epoch() + cpcdt_timezone_offset(tz));
+	date->hr = 0;
+	date->min = 0;
+	date->sec = 0;
+	return date;
+}
+
+/**
+ * Gets yesterday's date
+ */
+static inline struct cpcdt____date *cpcdt_get_yesterday_with_timezone(cpcdt_timezone_t tz)
+{
+	struct cpcdt____date *date = cpcdt_make_date(sec_since_epoch() - 86400 + cpcdt_timezone_offset(tz));
+	date->hr = 0;
+	date->min = 0;
+	date->sec = 0;
+	return date;
+}
+
+/**
+ * Gets tomorrow's date
+ */
+static inline struct cpcdt____date *cpcdt_get_tomorrow_with_timezone(cpcdt_timezone_t tz)
+{
+	struct cpcdt____date *date = cpcdt_make_date(sec_since_epoch() + 86400 + cpcdt_timezone_offset(tz));
+	date->hr = 0;
+	date->min = 0;
+	date->sec = 0;
+	return date;
+}
+
+/**
  * Compares two dates, returns -1 if x comes before y, 1 if y comes before x, and 0 if equal
  */
 static inline int cpcdt_compar_date(const struct cpcdt____date *x, const struct cpcdt____date *y)
