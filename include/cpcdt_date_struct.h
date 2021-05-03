@@ -225,6 +225,36 @@ static inline struct cpcdt____date *cpcdt_get_tomorrow_with_timezone(cpcdt_timez
 }
 
 /**
+ * Get the next day of week
+ */
+static inline struct cpcdt____date *cpcdt_get_next_day_week(cpcdt_day_t day)
+{
+	struct cpcdt____date *date = cpcdt_get_today();
+	cpcdt_sec_t sec = cpcdt_get_time(date);
+	if(day == date->dayw)
+		sec += 604800;
+	else
+		sec += (7 + day - date->dayw) % 7 * 86400;
+	free(date);
+	return cpcdt_make_date(sec);
+}
+
+/**
+ * Get the next day of week
+ */
+static inline struct cpcdt____date *cpcdt_get_next_day_week_with_timezone(cpcdt_day_t day, cpcdt_timezone_t tz)
+{
+	struct cpcdt____date *date = cpcdt_get_today_with_timezone(tz);
+	cpcdt_sec_t sec = cpcdt_get_time(date);
+	if(day == date->dayw)
+		sec += 604800;
+	else
+		sec += (7 + day - date->dayw) % 7 * 86400;
+	free(date);
+	return cpcdt_make_date(sec);
+}
+
+/**
  * Compares two dates, returns -1 if x comes before y, 1 if y comes before x, and 0 if equal
  */
 static inline int cpcdt_compar_date(const struct cpcdt____date *x, const struct cpcdt____date *y)
