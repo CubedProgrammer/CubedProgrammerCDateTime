@@ -8,9 +8,9 @@
 cpcdt_ns_t nsec_since_epoch(void)
 {
 	cpcdt_ns_t ns;
-#ifdef __linux__
+#if __STDC_VERSION__ >= 201112L
 	struct timespec tm;
-	clock_gettime(CLOCK_REALTIME, &tm);
+	timespec_get(&tm, TIME_UTC);
 	ns = tm.tv_sec * 1000000000 + tm.tv_nsec;
 #elif defined _WIN32
 	SYSTEMTIME tm;
@@ -23,6 +23,10 @@ cpcdt_ns_t nsec_since_epoch(void)
 	ns = num.QuadPart;
 	ns -= 116444736000000000;
 	ns *= 100;
+#else
+	struct timespec tm;
+	clock_gettime(CLOCK_REALTIME, &tm);
+	ns = tm.tv_sec * 1000000000 + tm.tv_nsec;
 #endif
 	return ns;
 }
