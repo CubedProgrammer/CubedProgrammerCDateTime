@@ -299,7 +299,7 @@ void cpcdt_readable_date(char *cbuf, const struct cpcdt____date *date)
 		suffix = "nd";
 	else if(date->day == 3 || date->day == 23)
 		suffix = "rd";
-	sprintf(cbuf, "%s, %s %d%s, %d, %s%d:%s%d:%s%lld", CPCDT____DWN[date->dayw], CPCDT____MYN[date->month], date->day, suffix, date->year, date->hr < 10 ? "0" : "", date->hr, date->min < 10 ? "0" : "", date->min, date->sec < 10 ? "0" : "", date->sec);
+	sprintf(cbuf, "%s, %s %d%s, %d, %02d:%02d:%02lld", CPCDT____DWN[date->dayw], CPCDT____MYN[date->month], date->day, suffix, date->year, date->hr, date->min, date->sec);
 }
 
 int CPCDT____LAST_PARSE_ERROR;

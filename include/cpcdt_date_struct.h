@@ -1,6 +1,7 @@
 #ifndef __cplusplus
 #ifndef Included_cpcdt_date_struct_h
 #define Included_cpcdt_date_struct_h
+#include<stdlib.h>
 #include<cpcdt_time_epoch.h>
 
 #define CPCDT_FIELD_SEC 997
@@ -78,6 +79,7 @@ struct cpcdt____date
 	cpcdt_timezone_t timezone;
 };
 typedef struct cpcdt____date *cpcdt_date;
+typedef const struct cpcdt____date *ccpcdt_date;
 /**
  * Converts time since epoch to readable date
  */
