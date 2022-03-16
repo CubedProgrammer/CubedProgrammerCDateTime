@@ -8,6 +8,8 @@ int cpcdt_snprintf(char *restrict buf, size_t bufsz, const char *restrict fmt, c
 	char ch;
 	--bufsz;
 	cpcdt_hour_t tmphr;
+	cpcdt_year_t tmpyr;
+	char yrstr[5];
 	for(const char *it = fmt; *it != '\0'; ++it)
 	{
 		ch = *it;
@@ -81,6 +83,52 @@ int cpcdt_snprintf(char *restrict buf, size_t bufsz, const char *restrict fmt, c
 						buf[cnt] = date->hr >= 12 ? 'p' : 'a';
 					if(++cnt < bufsz)
 						buf[cnt] = 'm';
+					break;
+				case'Y':
+					tmpyr = date->year;
+					for(int i = 3; i >= 0; --i)
+					{
+						yrstr[i] = '0' + tmpyr % 10;
+						tmpyr /= 10;
+					}
+					yrstr[4] = '\0';
+					for(int i = 0; i < 4; ++i)
+					{
+						if(cnt < bufsz)
+							buf[cnt] = yrstr[i];
+						if(i < 3)
+							++cnt;
+					}
+					break;
+				case'y':
+					tmpyr = date->year % 100;
+					if(cnt < bufsz)
+						buf[cnt] = '0' + tmpyr / 10;
+					if(++cnt < bufsz)
+						buf[cnt] = '0' + tmpyr % 10;
+					break;
+				case'm':
+					if(cnt < bufsz)
+						buf[cnt] = '0' + date->month / 10;
+					if(++cnt < bufsz)
+						buf[cnt] = '0' + date->month % 10;
+					break;
+				case'e':
+				if(date->day >= 10)
+				{
+				case'd':
+					if(cnt < bufsz)
+						buf[cnt] = '0' + date->day / 10;
+					if(++cnt < bufsz)
+						buf[cnt] = '0' + date->day % 10;
+					break;
+				}
+				else if(cnt < bufsz)
+				{
+					buf[cnt] = '0' + date->day;
+					break;
+				}
+				else
 					break;
 				default:
 					if(cnt < bufsz)
