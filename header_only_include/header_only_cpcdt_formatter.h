@@ -2,6 +2,28 @@
 #ifndef Included_header_only_cpcdt_formatter_h
 #define Included_header_only_cpcdt_formatter_h
 #include<cpcdt_formatter.h>
+int cpcdt_printf(const char *restrict fmt, struct cpcdt____date *date)
+{
+	return cpcdt_fprintf(stdout, fmt, date);
+}
+int cpcdt_fprintf(FILE *f, const char *restrict fmt, const struct cpcdt____date *date)
+{
+	char cbuf[720];
+	int len = cpcdt_snprintf(cbuf, sizeof(cbuf), fmt, date);
+	if(len >= 720)
+	{
+		char *big = malloc(len + 1);
+		cpcdt_snprintf(big, len + 1, fmt, date);
+		len = fwrite(big, 1, len, f);
+	}
+	else
+		len = fwrite(cbuf, 1, len, f);
+	return len;
+}
+int cpcdt_sprintf(char *restrict buf, const char *restrict fmt, const struct cpcdt____date *date)
+{
+	return cpcdt_snprintf(buf, -1, fmt, date);
+}
 int cpcdt_snprintf(char *restrict buf, size_t bufsz, const char *restrict fmt, const struct cpcdt____date *date)
 {
 	int cnt = 0;
@@ -129,6 +151,10 @@ int cpcdt_snprintf(char *restrict buf, size_t bufsz, const char *restrict fmt, c
 					break;
 				}
 				else
+					break;
+				case'w':
+					if(cnt < bufsz)
+						buf[cnt] = date->dayw + '0';
 					break;
 				default:
 					if(cnt < bufsz)
