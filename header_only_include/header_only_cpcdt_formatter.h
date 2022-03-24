@@ -29,9 +29,10 @@ int cpcdt_snprintf(char *restrict buf, size_t bufsz, const char *restrict fmt, c
 	int cnt = 0;
 	char ch;
 	--bufsz;
+	cpcdt_min_t tmpmin;
 	cpcdt_hour_t tmphr;
 	cpcdt_year_t tmpyr;
-	char yrstr[5];
+	char yrstr[5], cbuf[13];
 	for(const char *it = fmt; *it != '\0'; ++it)
 	{
 		ch = *it;
@@ -43,6 +44,47 @@ int cpcdt_snprintf(char *restrict buf, size_t bufsz, const char *restrict fmt, c
 				case'%':
 					if(cnt < bufsz)
 						buf[cnt] = ch;
+					break;
+				case'R':
+				case'T':
+					cbuf[0] = '0' + date->hr / 10;
+					cbuf[1] = '0' + date->hr % 10;
+					cbuf[2] = ':';
+					cbuf[3] = '0' + date->min / 10;
+					cbuf[4] = '0' + date->min % 10;
+					for(int i = 0; i < 5 && i + cnt < bufsz; ++i)
+						buf[cnt + i] = cbuf[i];
+					cnt += 5;
+					if(ch == 'T')
+					{
+						cbuf[0] = ':';
+						cbuf[1] = '0' + date->sec / 10;
+						cbuf[2] = '0' + date->sec % 10;
+						for(int i = 0; i < 3 && i + cnt < bufsz; ++i)
+							buf[cnt + i] = cbuf[i];
+						cnt += 3;
+					}
+					--cnt;
+					break;
+				case'z':
+					tmphr = cpcdt_timezone_offset(date->timezone) / 3600;
+					if(cnt < bufsz)
+						buf[cnt] = tmphr < 0 ? '-' : '+';
+					if(tmphr < 0)
+						tmphr *= -1;
+					tmpmin = cpcdt_timezone_offset(date->timezone) / 60 % 60;
+					tmpmin += 60;
+					tmpmin %= 60;
+					if(++cnt < bufsz)
+						buf[cnt] = '0' + tmphr / 10;
+					if(++cnt < bufsz)
+						buf[cnt] = '0' + tmphr % 10;
+					if(++cnt < bufsz)
+						buf[cnt] = ':';
+					if(++cnt < bufsz)
+						buf[cnt] = '0' + tmpmin / 10;
+					if(++cnt < bufsz)
+						buf[cnt] = '0' + tmpmin % 10;
 					break;
 				case'H':
 					if(cnt < bufsz)

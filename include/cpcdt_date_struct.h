@@ -199,6 +199,7 @@ static inline struct cpcdt____date *cpcdt_get_today_with_timezone(cpcdt_timezone
 	date->hr = 0;
 	date->min = 0;
 	date->sec = 0;
+	date->timezone = tz;
 	return date;
 }
 
@@ -211,6 +212,7 @@ static inline struct cpcdt____date *cpcdt_get_yesterday_with_timezone(cpcdt_time
 	date->hr = 0;
 	date->min = 0;
 	date->sec = 0;
+	date->timezone = tz;
 	return date;
 }
 
@@ -223,6 +225,7 @@ static inline struct cpcdt____date *cpcdt_get_tomorrow_with_timezone(cpcdt_timez
 	date->hr = 0;
 	date->min = 0;
 	date->sec = 0;
+	date->timezone = tz;
 	return date;
 }
 
@@ -253,7 +256,7 @@ static inline struct cpcdt____date *cpcdt_get_next_day_week_with_timezone(cpcdt_
 	else
 		sec += (7 + day - date->dayw) % 7 * 86400;
 	free(date);
-	return cpcdt_make_date(sec);
+	return cpcdt_make_date_with_timezone(sec, tz);
 }
 
 /**
