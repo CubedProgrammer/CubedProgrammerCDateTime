@@ -260,6 +260,12 @@ static inline struct cpcdt____date *cpcdt_get_next_day_week_with_timezone(cpcdt_
 }
 
 /**
+ * Get week of year of a date
+ * The first week is one
+ */
+cpcdt_day_t cpcdt_get_week(const struct cpcdt____date *date);
+
+/**
  * Compares two dates, returns -1 if x comes before y, 1 if y comes before x, and 0 if equal
  */
 static inline int cpcdt_compar_date(const struct cpcdt____date *x, const struct cpcdt____date *y)

@@ -372,6 +372,17 @@ int cpcdt_get_last_parse_error(void)
 }
 
 /**
+ * Get week of year of a date
+ * The first week is one
+ */
+cpcdt_day_t cpcdt_get_week(const struct cpcdt____date *date)
+{
+	struct cpcdt____date first;
+	cpcdt_set_date_all_fields(&first, 0, 0, 0, 1, CPCDT_MONTH_JAN, date->year);
+	return cpcdt_date_diff(date, &first) / 604800 + 1;
+}
+
+/**
  * Converts time since epoch to readable date
  */
 void cpcdt_get_date(cpcdt_sec_t et, cpcdt_sec_t *sec, cpcdt_min_t *min, cpcdt_hour_t *hr, cpcdt_day_t *day, cpcdt_day_t *dayw, cpcdt_month_t *month, cpcdt_year_t *yr)
